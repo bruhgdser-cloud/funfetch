@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Определение цветов
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+WHITE='\033[1;37m'
+NC='\033[0m' # No Color
+
+# Сбор информации о системе
+OS=$(grep '^NAME=' /etc/os-release | cut -d= -f2 | tr -d '"')
+CPU=$(lscpu | grep 'Model name' | cut -d: -f2 | sed -e 's/^[ \t]*//' | awk -F'@' '{print $1}')
+GPU=$(lspci | grep -Ei 'vga|3d|display' | cut -d: -f3 | sed 's/\[.*\]//g' | sed -e 's/^[ \t]*//' | head -n1)
+WM="${XDG_CURRENT_DESKTOP:-$DESKTOP_SESSION}"
+
+# Расчет ОЗУ
+RAM_TOTAL=$(free -m | awk '/Mem:/ {print $2}')
+RAM_USED=$(free -m | awk '/Mem:/ {print $3}')
+
+# Если WM не определен, пробуем взять имя процесса
+if [ -z "$WM" ]; then
+    WM=$(basename "$(ps -e | grep -E 'sway|i3|bspwm|awesomewm|openbox|hyprland' | head -n1 | awk '{print $4}')" 2>/dev/null)
+    [ -z "$WM" ] && WM="TTY / Unknown"
+fi
+
+# Вывод ASCII-улыбки и информации side-by-side
+echo -e "   ${GREEN}OOOOOOOOO${NC}      ${CYAN}OS:${NC}   ${WHITE}${OS}${NC}"
+echo -e " ${GREEN}OO         OO${NC}    ${CYAN}WM:${NC}   ${WHITE}${WM}${NC}"
+echo -e "${GREEN}OO  ${WHITE}O${GREEN}     ${WHITE}O${GREEN}  OO${NC}   ${CYAN}CPU:${NC}  ${WHITE}${CPU}${NC}"
+echo -e "${GREEN}O             O${NC}   ${CYAN}GPU:${NC}  ${WHITE}${GPU}${NC}"
+echo -e "${GREEN}OO  ${WHITE}\_______/${GREEN}  OO${NC}   ${CYAN}RAM:${NC}  ${WHITE}${RAM_USED}MB / ${RAM_TOTAL}MB${NC}"
+echo -e " ${GREEN}OO         OO${NC}"
+echo -e "   ${GREEN}OOOOOOOOO${NC}"
+echo ""
