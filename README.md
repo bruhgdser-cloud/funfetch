@@ -15,7 +15,7 @@ Choose **one** of the two convenient methods below to install the package on you
 Install directly using the precompiled binary package without building from source:
 
 ```bash
-git clone https://github.com
+git clone https://github.com/bruhgdser-cloud/funfetch.git
 cd funfetch
 sudo pacman -U funfetch-1.0.0-1-any.pkg.tar.zst
 ```
@@ -24,7 +24,7 @@ sudo pacman -U funfetch-1.0.0-1-any.pkg.tar.zst
 If you prefer to package it yourself using the native Arch Linux build system:
 
 ```bash
-git clone https://github.com
+git clone https://github.com/bruhgdser-cloud/funfetch.git
 cd funfetch
 makepkg -si
 ```
